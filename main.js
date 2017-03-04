@@ -90,34 +90,71 @@ var gameLoop = function() {
 	// Draw the perspective-transformed map
 	context.strokeRect(205,4,96,96);
 
-	var x1 = -tx1 * 16 / tz1;
-	var y1a = -50 / tz1;
-	var y1b = 50 / tz1;
-	var x2 = -tx2 * 16 / tz2;
-	var y2a = -50 / tz2;
-	var y2b = 50 / tz2;
+	if(tz1 > 0 || tz2 > 0) {
+		// If the line crosses the player's viewplane, clip it.
+		var i1 = intersect(tx1,tz1, tx2,tz2, -0.0001,0.0001, -20,5);
+		var i2 = intersect(tx1,tz1, tx2,tz2,  0.0001,0.0001,  20,5);
+		if(tz1 <= 0) {
+			if(i1.y > 0) {
+				tx1 = i1.x;
+				tz1 = i1.y;
+			} else {
+				tx1 = i2.x;
+				tz1 = i2.y;
+			}
+		}
+		if(tz2 <= 0) {
+			if(i1.y > 0) {
+				tx2 = i1.x;
+				tz2 = i1.y;
+			} else {
+				tx2 = i2.x;
+				tz2 = i2.y;
+			}
+		}
 
-	// Top
-	context.beginPath();
-	context.moveTo(250 - x1, 50 - y1a);
-	context.lineTo(250 - x2, 50 - y2a);
-	context.stroke();
-	// Bottom
-	context.beginPath();
-	context.moveTo(250 - x1, 50 - y1b);
-	context.lineTo(250 - x2, 50 - y2b);
-	context.stroke();
-	// Left
-	context.beginPath();
-	context.moveTo(250 - x1, 50 - y1a);
-	context.lineTo(250 - x1, 50 - y1b);
-	context.stroke();
-	// Right
-	context.beginPath();
-	context.moveTo(250 - x2, 50 - y2a);
-	context.lineTo(250 - x2, 50 - y2b);
-	context.stroke();
+		var x1 = -tx1 * 16 / tz1;
+		var y1a = -50 / tz1;
+		var y1b = 50 / tz1;
+		var x2 = -tx2 * 16 / tz2;
+		var y2a = -50 / tz2;
+		var y2b = 50 / tz2;
+
+		// Top
+		context.beginPath();
+		context.moveTo(250 - x1, 50 - y1a);
+		context.lineTo(250 - x2, 50 - y2a);
+		context.stroke();
+		// Bottom
+		context.beginPath();
+		context.moveTo(250 - x1, 50 - y1b);
+		context.lineTo(250 - x2, 50 - y2b);
+		context.stroke();
+		// Left
+		context.beginPath();
+		context.moveTo(250 - x1, 50 - y1a);
+		context.lineTo(250 - x1, 50 - y1b);
+		context.stroke();
+		// Right
+		context.beginPath();
+		context.moveTo(250 - x2, 50 - y2a);
+		context.lineTo(250 - x2, 50 - y2b);
+		context.stroke();
+	}
 };
 
 // Start game loop
 gameLoop();
+
+function cross(x1, y1, x2, y2) {
+	return x1 * y2 - x1 * x2;
+}
+
+function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+	var x = cross(x1, y1, x2, y2);
+	var y = cross(x3, y3, x4, y4);
+	var det = cross(x1 - x2, y1 - y2, x3 - x4, y3 - y4);
+	x = cross(x, x1 - x2, y, x3 - x4) / det;
+	y = cross(x, y1 - y2, y, y3 - y4) / det;
+	return { x: x, y: y };
+}
