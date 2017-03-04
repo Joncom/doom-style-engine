@@ -17,21 +17,35 @@ var angle = 0;
 // Capture keyboard input
 var INPUT = { LEFT: false, UP: false, RIGHT: false, DOWN: false };
 window.addEventListener('keydown', function(ev) {
-	(ev.keyCode === 37) && (INPUT.LEFT = true);
-	(ev.keyCode === 38) && (INPUT.UP = true);
-	(ev.keyCode === 39) && (INPUT.RIGHT = true);
-	(ev.keyCode === 40) && (INPUT.DOWN = true);
+	if(ev.keyCode === 37) { INPUT.LEFT = true; }
+	else if(ev.keyCode === 38) { INPUT.UP = true; }
+	else if(ev.keyCode === 39) { INPUT.RIGHT = true; }
+	else if(ev.keyCode === 40) { INPUT.DOWN = true; }
 });
 window.addEventListener('keyup', function(ev) {
-	(ev.keyCode === 37) && (INPUT.LEFT = false);
-	(ev.keyCode === 38) && (INPUT.UP = false);
-	(ev.keyCode === 39) && (INPUT.RIGHT = false);
-	(ev.keyCode === 40) && (INPUT.DOWN = false);
+	if(ev.keyCode === 37) { INPUT.LEFT = false; }
+	else if(ev.keyCode === 38) { INPUT.UP = false; }
+	else if(ev.keyCode === 39) { INPUT.RIGHT = false; }
+	else if(ev.keyCode === 40) { INPUT.DOWN = false; }
 });
 
 // Define game loop
 var gameLoop = function() {
 	requestAnimationFrame(gameLoop);
+
+	// Move player
+	if(INPUT.LEFT && !INPUT.RIGHT) {
+		angle -= 0.1;
+	} else if(INPUT.RIGHT && !INPUT.LEFT) {
+		angle += 0.1;
+	}
+	if(INPUT.UP && !INPUT.DOWN) {
+		px += Math.cos(angle);
+		py += Math.sin(angle);
+	} else if(INPUT.DOWN && !INPUT.UP) {
+		px -= Math.cos(angle);
+		py -= Math.sin(angle);
+	}
 
 	// Erase everything on the canvas
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -49,18 +63,29 @@ var gameLoop = function() {
 	context.lineTo(px + Math.cos(angle) * 5, py + Math.sin(angle) * 5);
 	context.stroke();
 
-	if(INPUT.UP && !INPUT.DOWN) {
-		px += Math.cos(angle);
-		py += Math.sin(angle);
-	} else if(INPUT.DOWN && !INPUT.UP) {
-		px -= Math.cos(angle);
-		py -= Math.sin(angle);
-	}
-	if(INPUT.LEFT && !INPUT.RIGHT) {
-		angle -= 0.1;
-	} else if(INPUT.RIGHT && !INPUT.LEFT) {
-		angle += 0.1;
-	}
+	// Draw the transformed map
+	context.strokeRect(105,4,96,96);
+
+	// Transform the vertexes relative to the player
+	var tx1 = vx1 - px;
+	var ty1 = vy1 - py;
+	var tx2 = vx2 - px;
+	var ty2 = vy2 - py;
+	// Rotate them around the player's view
+	var tz1 = tx1 * Math.cos(angle) + ty1 * Math.sin(angle);
+	var tz2 = tx2 * Math.cos(angle) + ty2 * Math.sin(angle);
+	tx1 = tx1 * Math.sin(angle) - ty1 * Math.cos(angle);
+	tx2 = tx2 * Math.sin(angle) - ty2 * Math.cos(angle);
+
+	context.beginPath();
+	context.moveTo(150 - tx1, 50 - tz1);
+	context.lineTo(150 - tx2, 50 - tz2);
+	context.stroke();
+
+	context.beginPath();
+	context.moveTo(150, 50);
+	context.lineTo(150, 50 + 5);
+	context.stroke();
 };
 
 // Start game loop
