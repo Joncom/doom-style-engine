@@ -86,6 +86,37 @@ var gameLoop = function() {
 	context.moveTo(150, 50);
 	context.lineTo(150, 50 + 5);
 	context.stroke();
+
+	// Draw the perspective-transformed map
+	context.strokeRect(205,4,96,96);
+
+	var x1 = -tx1 * 16 / tz1;
+	var y1a = -50 / tz1;
+	var y1b = 50 / tz1;
+	var x2 = -tx2 * 16 / tz2;
+	var y2a = -50 / tz2;
+	var y2b = 50 / tz2;
+
+	// Top
+	context.beginPath();
+	context.moveTo(250 - x1, 50 - y1a);
+	context.lineTo(250 - x2, 50 - y2a);
+	context.stroke();
+	// Bottom
+	context.beginPath();
+	context.moveTo(250 - x1, 50 - y1b);
+	context.lineTo(250 - x2, 50 - y2b);
+	context.stroke();
+	// Left
+	context.beginPath();
+	context.moveTo(250 - x1, 50 - y1a);
+	context.lineTo(250 - x1, 50 - y1b);
+	context.stroke();
+	// Right
+	context.beginPath();
+	context.moveTo(250 - x2, 50 - y2a);
+	context.lineTo(250 - x2, 50 - y2b);
+	context.stroke();
 };
 
 // Start game loop
