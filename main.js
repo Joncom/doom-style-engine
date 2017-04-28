@@ -13,6 +13,11 @@ screen2Canvas.width = 96;
 screen2Canvas.height = 96;
 screen2Context = screen2Canvas.getContext("2d");
 
+var screen3Canvas = document.createElement("canvas");
+screen3Canvas.width = 96;
+screen3Canvas.height = 96;
+screen3Context = screen3Canvas.getContext("2d");
+
 // The end segments for the line segment representing the "wall"
 var vx1 = 70;
 var vy1 = 20;
@@ -61,6 +66,7 @@ var gameLoop = function() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	screen1Context.clearRect(0, 0, screen1Canvas.width, screen1Canvas.height);
 	screen2Context.clearRect(0, 0, screen2Canvas.width, screen2Canvas.height);
+	screen3Context.clearRect(0, 0, screen3Canvas.width, screen3Canvas.height);
 
 
 	// Draw the absolute map
@@ -104,9 +110,8 @@ var gameLoop = function() {
 	context.drawImage(screen2Canvas, 105, 4);
 	context.strokeRect(105, 4, screen2Canvas.width, screen2Canvas.height);
 
-	// Draw the perspective-transformed map
-	context.strokeRect(205,4,96,96);
 
+	// Draw the perspective-transformed map
 	if(tz1 > 0 || tz2 > 0) {
 		// If the line crosses the player's viewplane, clip it.
 		var i1 = intersect(tx1,tz1, tx2,tz2, -0.0001,0.0001, -20,5);
@@ -138,25 +143,28 @@ var gameLoop = function() {
 		var y2b = 50 / tz2;
 
 		// Top
-		context.beginPath();
-		context.moveTo(250 - x1, 50 - y1a);
-		context.lineTo(250 - x2, 50 - y2a);
-		context.stroke();
+		screen3Context.beginPath();
+		screen3Context.moveTo(50 - x1, 50 - y1a);
+		screen3Context.lineTo(50 - x2, 50 - y2a);
+		screen3Context.stroke();
 		// Bottom
-		context.beginPath();
-		context.moveTo(250 - x1, 50 - y1b);
-		context.lineTo(250 - x2, 50 - y2b);
-		context.stroke();
+		screen3Context.beginPath();
+		screen3Context.moveTo(50 - x1, 50 - y1b);
+		screen3Context.lineTo(50 - x2, 50 - y2b);
+		screen3Context.stroke();
 		// Left
-		context.beginPath();
-		context.moveTo(250 - x1, 50 - y1a);
-		context.lineTo(250 - x1, 50 - y1b);
-		context.stroke();
+		screen3Context.beginPath();
+		screen3Context.moveTo(50 - x1, 50 - y1a);
+		screen3Context.lineTo(50 - x1, 50 - y1b);
+		screen3Context.stroke();
 		// Right
-		context.beginPath();
-		context.moveTo(250 - x2, 50 - y2a);
-		context.lineTo(250 - x2, 50 - y2b);
-		context.stroke();
+		screen3Context.beginPath();
+		screen3Context.moveTo(50 - x2, 50 - y2a);
+		screen3Context.lineTo(50 - x2, 50 - y2b);
+		screen3Context.stroke();
+
+		context.drawImage(screen3Canvas, 205, 4);
+		context.strokeRect(205, 4, screen3Canvas.width, screen3Canvas.height);
 	}
 };
 
