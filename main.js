@@ -1,6 +1,6 @@
 var canvas = document.getElementsByTagName('canvas')[0];
-canvas.width = 640;
-canvas.height = 480;
+canvas.width = 320;
+canvas.height = 100;
 var context = canvas.getContext('2d');
 
 var screen1Canvas = document.createElement("canvas");
