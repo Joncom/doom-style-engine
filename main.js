@@ -172,7 +172,7 @@ var gameLoop = function() {
 gameLoop();
 
 function cross(x1, y1, x2, y2) {
-	return x1 * y2 - x1 * x2;
+	return x1 * y2 - y1 * x2;
 }
 
 function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
