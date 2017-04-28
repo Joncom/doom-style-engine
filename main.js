@@ -144,23 +144,23 @@ var gameLoop = function() {
 
 		// Top
 		screen3Context.beginPath();
-		screen3Context.moveTo(50 - x1, 50 - y1a);
-		screen3Context.lineTo(50 - x2, 50 - y2a);
+		screen3Context.moveTo(50 + x1, 50 + y1a);
+		screen3Context.lineTo(50 + x2, 50 + y2a);
 		screen3Context.stroke();
 		// Bottom
 		screen3Context.beginPath();
-		screen3Context.moveTo(50 - x1, 50 - y1b);
-		screen3Context.lineTo(50 - x2, 50 - y2b);
+		screen3Context.moveTo(50 + x1, 50 + y1b);
+		screen3Context.lineTo(50 + x2, 50 + y2b);
 		screen3Context.stroke();
 		// Left
 		screen3Context.beginPath();
-		screen3Context.moveTo(50 - x1, 50 - y1a);
-		screen3Context.lineTo(50 - x1, 50 - y1b);
+		screen3Context.moveTo(50 + x1, 50 + y1a);
+		screen3Context.lineTo(50 + x1, 50 + y1b);
 		screen3Context.stroke();
 		// Right
 		screen3Context.beginPath();
-		screen3Context.moveTo(50 - x2, 50 - y2a);
-		screen3Context.lineTo(50 - x2, 50 - y2b);
+		screen3Context.moveTo(50 + x2, 50 + y2a);
+		screen3Context.lineTo(50 + x2, 50 + y2b);
 		screen3Context.stroke();
 
 	}
