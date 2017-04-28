@@ -3,6 +3,11 @@ canvas.width = 640;
 canvas.height = 480;
 var context = canvas.getContext('2d');
 
+var screen1Canvas = document.createElement("canvas");
+screen1Canvas.width = 96;
+screen1Canvas.height = 96;
+screen1Context = screen1Canvas.getContext("2d");
+
 // The end segments for the line segment representing the "wall"
 var vx1 = 70;
 var vy1 = 20;
@@ -50,18 +55,21 @@ var gameLoop = function() {
 	// Erase everything on the canvas
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
+	screen1Context.clearRect(0, 0, screen1Canvas.width, screen1Canvas.height);
+
 	// Draw the absolute map
-	context.strokeRect(4,4,96,96);
+	screen1Context.beginPath();
+	screen1Context.moveTo(vx1, vy1);
+	screen1Context.lineTo(vx2, vy2);
+	screen1Context.stroke();
 
-	context.beginPath();
-	context.moveTo(vx1, vy1);
-	context.lineTo(vx2, vy2);
-	context.stroke();
+	screen1Context.beginPath();
+	screen1Context.moveTo(px, py);
+	screen1Context.lineTo(px + Math.cos(angle) * 5, py + Math.sin(angle) * 5);
+	screen1Context.stroke();
 
-	context.beginPath();
-	context.moveTo(px, py);
-	context.lineTo(px + Math.cos(angle) * 5, py + Math.sin(angle) * 5);
-	context.stroke();
+	context.drawImage(screen1Canvas, 4, 4);
+	context.strokeRect(4, 4, screen1Canvas.width, screen1Canvas.height);
 
 	// Draw the transformed map
 	context.strokeRect(105,4,96,96);
