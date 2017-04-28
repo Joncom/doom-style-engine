@@ -1,6 +1,8 @@
 var canvas = document.getElementsByTagName('canvas')[0];
 canvas.width = 320;
 canvas.height = 100;
+canvas.style.width = "" + (canvas.width * 2) + "px";
+canvas.style.imageRendering = "pixelated";
 var context = canvas.getContext('2d');
 
 var screen1Canvas = document.createElement("canvas");
