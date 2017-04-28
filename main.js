@@ -163,9 +163,9 @@ var gameLoop = function() {
 		screen3Context.lineTo(50 - x2, 50 - y2b);
 		screen3Context.stroke();
 
-		context.drawImage(screen3Canvas, 205, 4);
-		context.strokeRect(205, 4, screen3Canvas.width, screen3Canvas.height);
 	}
+	context.drawImage(screen3Canvas, 205, 4);
+	context.strokeRect(205, 4, screen3Canvas.width, screen3Canvas.height);
 };
 
 // Start game loop
