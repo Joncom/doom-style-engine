@@ -8,6 +8,11 @@ screen1Canvas.width = 96;
 screen1Canvas.height = 96;
 screen1Context = screen1Canvas.getContext("2d");
 
+var screen2Canvas = document.createElement("canvas");
+screen2Canvas.width = 96;
+screen2Canvas.height = 96;
+screen2Context = screen2Canvas.getContext("2d");
+
 // The end segments for the line segment representing the "wall"
 var vx1 = 70;
 var vy1 = 20;
@@ -54,8 +59,9 @@ var gameLoop = function() {
 
 	// Erase everything on the canvas
 	context.clearRect(0, 0, canvas.width, canvas.height);
-
 	screen1Context.clearRect(0, 0, screen1Canvas.width, screen1Canvas.height);
+	screen2Context.clearRect(0, 0, screen2Canvas.width, screen2Canvas.height);
+
 
 	// Draw the absolute map
 	screen1Context.beginPath();
@@ -71,8 +77,8 @@ var gameLoop = function() {
 	context.drawImage(screen1Canvas, 4, 4);
 	context.strokeRect(4, 4, screen1Canvas.width, screen1Canvas.height);
 
+
 	// Draw the transformed map
-	context.strokeRect(105,4,96,96);
 
 	// Transform the vertexes relative to the player
 	var tx1 = vx1 - px;
@@ -85,15 +91,18 @@ var gameLoop = function() {
 	tx1 = tx1 * Math.sin(angle) - ty1 * Math.cos(angle);
 	tx2 = tx2 * Math.sin(angle) - ty2 * Math.cos(angle);
 
-	context.beginPath();
-	context.moveTo(150 - tx1, 50 - tz1);
-	context.lineTo(150 - tx2, 50 - tz2);
-	context.stroke();
+	screen2Context.beginPath();
+	screen2Context.moveTo(50 - tx1, 50 - tz1);
+	screen2Context.lineTo(50 - tx2, 50 - tz2);
+	screen2Context.stroke();
 
-	context.beginPath();
-	context.moveTo(150, 50);
-	context.lineTo(150, 50 + 5);
-	context.stroke();
+	screen2Context.beginPath();
+	screen2Context.moveTo(50, 50);
+	screen2Context.lineTo(50, 50 + 5);
+	screen2Context.stroke();
+
+	context.drawImage(screen2Canvas, 105, 4);
+	context.strokeRect(105, 4, screen2Canvas.width, screen2Canvas.height);
 
 	// Draw the perspective-transformed map
 	context.strokeRect(205,4,96,96);
