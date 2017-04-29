@@ -174,8 +174,8 @@ var gameLoop = function() {
 			screen3Context.stroke();
 		}
 
+		// Wall stroke
 		screen3Context.strokeStyle = "#bb6000";
-
 		// Top
 		screen3Context.beginPath();
 		screen3Context.moveTo(50 + x1, 50 + y1a);
