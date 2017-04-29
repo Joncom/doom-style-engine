@@ -148,6 +148,34 @@ var gameLoop = function() {
 		var y2a = -50 / tz2;
 		var y2b = 50 / tz2;
 
+		for(var x = x1; x < x2; x++) {
+			var ya = y1a + (x - x1) * (y2a - y1a) / (x2 - x1);
+			var yb = y1b + (x - x1) * (y2b - y1b) / (x2 - x1);
+
+			// Fill ceiling
+			screen3Context.strokeStyle = "#636363";
+			screen3Context.beginPath();
+			screen3Context.moveTo(50 + x, 0);
+			screen3Context.lineTo(50 + x, 50 + -ya);
+			screen3Context.stroke();
+
+			// Fill floor
+			screen3Context.strokeStyle = "#1f00bb";
+			screen3Context.beginPath();
+			screen3Context.moveTo(50 + x, 50 + yb);
+			screen3Context.lineTo(50 + x, 50 + 140);
+			screen3Context.stroke();
+
+			// Fill wall
+			screen3Context.strokeStyle = "#fbff34";
+			screen3Context.beginPath();
+			screen3Context.moveTo(50 + x, 50 + ya);
+			screen3Context.lineTo(50 + x, 50 + yb);
+			screen3Context.stroke();
+		}
+
+		screen3Context.strokeStyle = "#bb6000";
+
 		// Top
 		screen3Context.beginPath();
 		screen3Context.moveTo(50 + x1, 50 + y1a);
