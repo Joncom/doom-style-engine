@@ -22,8 +22,8 @@ screen3Context = screen3Canvas.getContext("2d");
 
 // The end segments for the line segment representing the "wall"
 var walls = [
-	{ x1: 20, y1: 20, x2: 60, y2: 40, color: "#00fffa" },
-	{ x1: 60, y1: 40, x2: 90, y2: 65, color: "#00ff50" },
+	{ x1: 20, y1: 20, x2: 60, y2: 15, color: "#00fffa" },
+	{ x1: 60, y1: 15, x2: 90, y2: 65, color: "#00ff50" },
 	{ x1: 90, y1: 65, x2: 50, y2: 80, color: "#fcff39" },
 	{ x1: 50, y1: 80, x2: 20, y2: 75, color: "#ff0eff" },
 	{ x1: 20, y1: 75, x2: 20, y2: 20, color: "#ff4c55" },
