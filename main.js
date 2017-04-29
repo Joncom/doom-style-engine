@@ -74,6 +74,7 @@ var gameLoop = function() {
 	screen3Context.clearRect(0, 0, screen3Canvas.width, screen3Canvas.height);
 
 
+	// Screen 1
 	// Draw the absolute map
 	walls.forEach((wall) => {
 		screen1Context.strokeStyle = wall.color;
@@ -88,14 +89,9 @@ var gameLoop = function() {
 	screen1Context.lineTo(px + Math.cos(angle) * 5, py + Math.sin(angle) * 5);
 	screen1Context.stroke();
 
-	context.drawImage(screen1Canvas, 4, 4);
 
-	context.strokeStyle = "#1f00bb";
-	context.strokeRect(4, 4, screen1Canvas.width, screen1Canvas.height);
-
-
+	// Screen 2
 	// Draw the transformed map
-
 	walls.forEach((wall) => {
 		// Transform the vertexes relative to the player
 		var dx1 = wall.x1 - px;
@@ -120,12 +116,8 @@ var gameLoop = function() {
 	screen2Context.lineTo(50, 50 - 5);
 	screen2Context.stroke();
 
-	context.drawImage(screen2Canvas, 105, 4);
 
-	context.strokeStyle = "#00bb00";
-	context.strokeRect(105, 4, screen2Canvas.width, screen2Canvas.height);
-
-
+	// Screen 3
 	// Draw the perspective-transformed map
 	walls.forEach((wall) => {
 		if(wall.ty1 > 0 || wall.ty2 > 0) {
@@ -210,8 +202,19 @@ var gameLoop = function() {
 		}
 	});
 
-	context.drawImage(screen3Canvas, 205, 4);
 
+	// Draw canvas 1
+	context.drawImage(screen1Canvas, 4, 4);
+	context.strokeStyle = "#1f00bb";
+	context.strokeRect(4, 4, screen1Canvas.width, screen1Canvas.height);
+
+	// Draw canvas 2
+	context.drawImage(screen2Canvas, 105, 4);
+	context.strokeStyle = "#00bb00";
+	context.strokeRect(105, 4, screen2Canvas.width, screen2Canvas.height);
+
+	// Draw canvas 3
+	context.drawImage(screen3Canvas, 205, 4);
 	context.strokeStyle = "#00b1af";
 	context.strokeRect(205, 4, screen3Canvas.width, screen3Canvas.height);
 };
