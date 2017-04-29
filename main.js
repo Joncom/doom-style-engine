@@ -21,10 +21,9 @@ screen3Canvas.height = 96;
 screen3Context = screen3Canvas.getContext("2d");
 
 // The end segments for the line segment representing the "wall"
-var vx1 = 70;
-var vy1 = 20;
-var vx2 = 70;
-var vy2 = 70;
+var walls = [
+	{ x1: 70, y1: 20, x2: 70, y2: 70 }
+];
 
 // The coordinates of the player
 var px = 50;
@@ -72,10 +71,12 @@ var gameLoop = function() {
 
 
 	// Draw the absolute map
-	screen1Context.beginPath();
-	screen1Context.moveTo(vx1, vy1);
-	screen1Context.lineTo(vx2, vy2);
-	screen1Context.stroke();
+	walls.forEach((wall) => {
+		screen1Context.beginPath();
+		screen1Context.moveTo(wall.x1, wall.y1);
+		screen1Context.lineTo(wall.x2, wall.y2);
+		screen1Context.stroke();
+	});
 
 	screen1Context.beginPath();
 	screen1Context.moveTo(px, py);
@@ -90,21 +91,23 @@ var gameLoop = function() {
 
 	// Draw the transformed map
 
-	// Transform the vertexes relative to the player
-	var tx1 = vx1 - px;
-	var ty1 = vy1 - py;
-	var tx2 = vx2 - px;
-	var ty2 = vy2 - py;
-	// Rotate them around the player's view
-	var tz1 = tx1 * Math.cos(angle) + ty1 * Math.sin(angle);
-	var tz2 = tx2 * Math.cos(angle) + ty2 * Math.sin(angle);
-	tx1 = tx1 * Math.sin(angle) - ty1 * Math.cos(angle);
-	tx2 = tx2 * Math.sin(angle) - ty2 * Math.cos(angle);
+	walls.forEach((wall) => {
+		// Transform the vertexes relative to the player
+		var dx1 = wall.x1 - px;
+		var dy1 = wall.y1 - py;
+		var dx2 = wall.x2 - px;
+		var dy2 = wall.y2 - py;
+		// Rotate them around the player's view
+		wall.ty1 = dx1 * Math.cos(angle) + dy1 * Math.sin(angle);
+		wall.ty2 = dx2 * Math.cos(angle) + dy2 * Math.sin(angle);
+		wall.tx1 = dx1 * Math.sin(angle) - dy1 * Math.cos(angle);
+		wall.tx2 = dx2 * Math.sin(angle) - dy2 * Math.cos(angle);
 
-	screen2Context.beginPath();
-	screen2Context.moveTo(50 - tx1, 50 - tz1);
-	screen2Context.lineTo(50 - tx2, 50 - tz2);
-	screen2Context.stroke();
+		screen2Context.beginPath();
+		screen2Context.moveTo(50 - wall.tx1, 50 - wall.ty1);
+		screen2Context.lineTo(50 - wall.tx2, 50 - wall.ty2);
+		screen2Context.stroke();
+	});
 
 	screen2Context.beginPath();
 	screen2Context.moveTo(50, 50);
@@ -118,86 +121,89 @@ var gameLoop = function() {
 
 
 	// Draw the perspective-transformed map
-	if(tz1 > 0 || tz2 > 0) {
-		// If the line crosses the player's viewplane, clip it.
-		var i1 = intersect(tx1,tz1, tx2,tz2, -0.0001,0.0001, -20,5);
-		var i2 = intersect(tx1,tz1, tx2,tz2,  0.0001,0.0001,  20,5);
-		if(tz1 <= 0) {
-			if(i1.y > 0) {
-				tx1 = i1.x;
-				tz1 = i1.y;
-			} else {
-				tx1 = i2.x;
-				tz1 = i2.y;
+	walls.forEach((wall) => {
+		if(wall.ty1 > 0 || wall.ty2 > 0) {
+			// If the line crosses the player's viewplane, clip it.
+			var i1 = intersect(wall.tx1,wall.ty1, wall.tx2,wall.ty2, -0.0001,0.0001, -20,5);
+			var i2 = intersect(wall.tx1,wall.ty1, wall.tx2,wall.ty2,  0.0001,0.0001,  20,5);
+			if(wall.ty1 <= 0) {
+				if(i1.y > 0) {
+					wall.tx1 = i1.x;
+					wall.ty1 = i1.y;
+				} else {
+					wall.tx1 = i2.x;
+					wall.ty1 = i2.y;
+				}
 			}
-		}
-		if(tz2 <= 0) {
-			if(i1.y > 0) {
-				tx2 = i1.x;
-				tz2 = i1.y;
-			} else {
-				tx2 = i2.x;
-				tz2 = i2.y;
+			if(wall.ty2 <= 0) {
+				if(i1.y > 0) {
+					wall.tx2 = i1.x;
+					wall.ty2 = i1.y;
+				} else {
+					wall.tx2 = i2.x;
+					wall.ty2 = i2.y;
+				}
 			}
+
+			var x1 = -wall.tx1 * 16 / wall.ty1;
+			var y1a = -50 / wall.ty1;
+			var y1b = 50 / wall.ty1;
+			var x2 = -wall.tx2 * 16 / wall.ty2;
+			var y2a = -50 / wall.ty2;
+			var y2b = 50 / wall.ty2;
+
+			for(var x = x1; x < x2; x++) {
+				var ya = y1a + (x - x1) * (y2a - y1a) / (x2 - x1);
+				var yb = y1b + (x - x1) * (y2b - y1b) / (x2 - x1);
+
+				// Fill ceiling
+				screen3Context.strokeStyle = "#636363";
+				screen3Context.beginPath();
+				screen3Context.moveTo(50 + x, 0);
+				screen3Context.lineTo(50 + x, 50 + -ya);
+				screen3Context.stroke();
+
+				// Fill floor
+				screen3Context.strokeStyle = "#1f00bb";
+				screen3Context.beginPath();
+				screen3Context.moveTo(50 + x, 50 + yb);
+				screen3Context.lineTo(50 + x, 50 + 140);
+				screen3Context.stroke();
+
+				// Fill wall
+				screen3Context.strokeStyle = "#fbff34";
+				screen3Context.beginPath();
+				screen3Context.moveTo(50 + x, 50 + ya);
+				screen3Context.lineTo(50 + x, 50 + yb);
+				screen3Context.stroke();
+			}
+
+			// Wall stroke
+			screen3Context.strokeStyle = "#bb6000";
+			// Top
+			screen3Context.beginPath();
+			screen3Context.moveTo(50 + x1, 50 + y1a);
+			screen3Context.lineTo(50 + x2, 50 + y2a);
+			screen3Context.stroke();
+			// Bottom
+			screen3Context.beginPath();
+			screen3Context.moveTo(50 + x1, 50 + y1b);
+			screen3Context.lineTo(50 + x2, 50 + y2b);
+			screen3Context.stroke();
+			// Left
+			screen3Context.beginPath();
+			screen3Context.moveTo(50 + x1, 50 + y1a);
+			screen3Context.lineTo(50 + x1, 50 + y1b);
+			screen3Context.stroke();
+			// Right
+			screen3Context.beginPath();
+			screen3Context.moveTo(50 + x2, 50 + y2a);
+			screen3Context.lineTo(50 + x2, 50 + y2b);
+			screen3Context.stroke();
+
 		}
+	});
 
-		var x1 = -tx1 * 16 / tz1;
-		var y1a = -50 / tz1;
-		var y1b = 50 / tz1;
-		var x2 = -tx2 * 16 / tz2;
-		var y2a = -50 / tz2;
-		var y2b = 50 / tz2;
-
-		for(var x = x1; x < x2; x++) {
-			var ya = y1a + (x - x1) * (y2a - y1a) / (x2 - x1);
-			var yb = y1b + (x - x1) * (y2b - y1b) / (x2 - x1);
-
-			// Fill ceiling
-			screen3Context.strokeStyle = "#636363";
-			screen3Context.beginPath();
-			screen3Context.moveTo(50 + x, 0);
-			screen3Context.lineTo(50 + x, 50 + -ya);
-			screen3Context.stroke();
-
-			// Fill floor
-			screen3Context.strokeStyle = "#1f00bb";
-			screen3Context.beginPath();
-			screen3Context.moveTo(50 + x, 50 + yb);
-			screen3Context.lineTo(50 + x, 50 + 140);
-			screen3Context.stroke();
-
-			// Fill wall
-			screen3Context.strokeStyle = "#fbff34";
-			screen3Context.beginPath();
-			screen3Context.moveTo(50 + x, 50 + ya);
-			screen3Context.lineTo(50 + x, 50 + yb);
-			screen3Context.stroke();
-		}
-
-		// Wall stroke
-		screen3Context.strokeStyle = "#bb6000";
-		// Top
-		screen3Context.beginPath();
-		screen3Context.moveTo(50 + x1, 50 + y1a);
-		screen3Context.lineTo(50 + x2, 50 + y2a);
-		screen3Context.stroke();
-		// Bottom
-		screen3Context.beginPath();
-		screen3Context.moveTo(50 + x1, 50 + y1b);
-		screen3Context.lineTo(50 + x2, 50 + y2b);
-		screen3Context.stroke();
-		// Left
-		screen3Context.beginPath();
-		screen3Context.moveTo(50 + x1, 50 + y1a);
-		screen3Context.lineTo(50 + x1, 50 + y1b);
-		screen3Context.stroke();
-		// Right
-		screen3Context.beginPath();
-		screen3Context.moveTo(50 + x2, 50 + y2a);
-		screen3Context.lineTo(50 + x2, 50 + y2b);
-		screen3Context.stroke();
-
-	}
 	context.drawImage(screen3Canvas, 205, 4);
 
 	context.strokeStyle = "#00b1af";
