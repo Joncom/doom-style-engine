@@ -83,6 +83,8 @@ var gameLoop = function() {
 	screen1Context.stroke();
 
 	context.drawImage(screen1Canvas, 4, 4);
+
+	context.strokeStyle = "#1f00bb";
 	context.strokeRect(4, 4, screen1Canvas.width, screen1Canvas.height);
 
 
@@ -110,6 +112,8 @@ var gameLoop = function() {
 	screen2Context.stroke();
 
 	context.drawImage(screen2Canvas, 105, 4);
+
+	context.strokeStyle = "#00bb00";
 	context.strokeRect(105, 4, screen2Canvas.width, screen2Canvas.height);
 
 
@@ -167,6 +171,8 @@ var gameLoop = function() {
 
 	}
 	context.drawImage(screen3Canvas, 205, 4);
+
+	context.strokeStyle = "#00b1af";
 	context.strokeRect(205, 4, screen3Canvas.width, screen3Canvas.height);
 };
 
