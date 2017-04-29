@@ -106,7 +106,7 @@ var gameLoop = function() {
 
 	screen2Context.beginPath();
 	screen2Context.moveTo(50, 50);
-	screen2Context.lineTo(50, 50 + 5);
+	screen2Context.lineTo(50, 50 - 5);
 	screen2Context.stroke();
 
 	context.drawImage(screen2Canvas, 105, 4);
