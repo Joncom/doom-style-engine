@@ -1,7 +1,7 @@
 var canvas = document.getElementsByTagName('canvas')[0];
 canvas.width = 320;
 canvas.height = 104;
-canvas.style.width = "" + (canvas.width * 2) + "px";
+canvas.style.width = "" + (canvas.width * 3) + "px";
 canvas.style.imageRendering = "pixelated";
 var context = canvas.getContext('2d');
 
