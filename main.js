@@ -22,11 +22,11 @@ screen3Context = screen3Canvas.getContext("2d");
 
 // The end segments for the line segment representing the "wall"
 var walls = [
-	{ x1: 20, y1: 20, x2: 60, y2: 40 },
-	{ x1: 60, y1: 40, x2: 90, y2: 65 },
-	{ x1: 90, y1: 65, x2: 50, y2: 80 },
-	{ x1: 50, y1: 80, x2: 20, y2: 75 },
-	{ x1: 20, y1: 75, x2: 20, y2: 20 },
+	{ x1: 20, y1: 20, x2: 60, y2: 40, color: "#00fffa" },
+	{ x1: 60, y1: 40, x2: 90, y2: 65, color: "#00ff50" },
+	{ x1: 90, y1: 65, x2: 50, y2: 80, color: "#fcff39" },
+	{ x1: 50, y1: 80, x2: 20, y2: 75, color: "#ff0eff" },
+	{ x1: 20, y1: 75, x2: 20, y2: 20, color: "#ff4c55" },
 ];
 
 // The coordinates of the player
@@ -76,6 +76,7 @@ var gameLoop = function() {
 
 	// Draw the absolute map
 	walls.forEach((wall) => {
+		screen1Context.strokeStyle = wall.color;
 		screen1Context.beginPath();
 		screen1Context.moveTo(wall.x1, wall.y1);
 		screen1Context.lineTo(wall.x2, wall.y2);
@@ -107,6 +108,7 @@ var gameLoop = function() {
 		wall.tx1 = dx1 * Math.sin(angle) - dy1 * Math.cos(angle);
 		wall.tx2 = dx2 * Math.sin(angle) - dy2 * Math.cos(angle);
 
+		screen2Context.strokeStyle = wall.color;
 		screen2Context.beginPath();
 		screen2Context.moveTo(50 - wall.tx1, 50 - wall.ty1);
 		screen2Context.lineTo(50 - wall.tx2, 50 - wall.ty2);
@@ -175,7 +177,7 @@ var gameLoop = function() {
 				screen3Context.stroke();
 
 				// Fill wall
-				screen3Context.strokeStyle = "#fbff34";
+				screen3Context.strokeStyle = wall.color;
 				screen3Context.beginPath();
 				screen3Context.moveTo(50 + x, 50 + ya);
 				screen3Context.lineTo(50 + x, 50 + yb);
